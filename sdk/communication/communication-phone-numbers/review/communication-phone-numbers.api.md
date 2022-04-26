@@ -29,6 +29,15 @@ export interface BeginUpdatePhoneNumberCapabilitiesOptions extends OperationOpti
 }
 
 // @public
+export interface CommunicationError {
+    code: string;
+    readonly details?: CommunicationError[];
+    readonly innerError?: CommunicationError;
+    message: string;
+    readonly target?: string;
+}
+
+// @public
 export type GetPurchasedPhoneNumberOptions = OperationOptions;
 
 // @public
@@ -123,6 +132,33 @@ export interface ReleasePhoneNumberResult {
 // @public
 export interface SearchAvailablePhoneNumbersRequest extends PhoneNumberSearchRequest {
     countryCode: string;
+}
+
+// @public (undocumented)
+export class SipRoutingClient {
+    constructor(connectionString: string, options?: PipelineOptions);
+    constructor(endpoint: string, credential: KeyCredential, options?: PipelineOptions);
+    constructor(endpoint: string, credential: TokenCredential, options?: PipelineOptions);
+    deleteTrunk(fqdn: string, options?: OperationOptions): Promise<void>;
+    getRoutes(options?: OperationOptions): Promise<SipTrunkRoute[]>;
+    getTrunks(options?: OperationOptions): Promise<SipTrunk[]>;
+    setRoutes(routes: SipTrunkRoute[], options?: OperationOptions): Promise<SipTrunkRoute[]>;
+    setTrunk(trunk: SipTrunk, options?: OperationOptions): Promise<SipTrunk>;
+    setTrunks(trunks: SipTrunk[], options?: OperationOptions): Promise<SipTrunk[]>;
+}
+
+// @public
+export interface SipTrunk {
+    fqdn: string;
+    sipSignalingPort: number;
+}
+
+// @public
+export interface SipTrunkRoute {
+    description?: string;
+    name: string;
+    numberPattern: string;
+    trunks?: string[];
 }
 
 

@@ -48,14 +48,20 @@ export {
 } from "./generated/src/models/";
 
 export {
-  SipConfiguration,
-  SipConfigurationPatch,
-  Trunk,
-  TrunkPatch,
-  TrunkRoute,
-  CommunicationError,
-  SipRoutingClientGetSipConfigurationResponse as GetSipConfigurationResponse,
-  SipRoutingClientOptionalParams as PatchSipConfigurationOptionalParams,
-  SipRoutingClientPatchSipConfigurationResponse as PatchSipConfigurationResponse,
-  SipRoutingClientPatchSipConfigurationOptionalParams as OptionalParams  
+  SipTrunkRoute,
+  CommunicationError
 } from "./generated/src/siprouting/models";
+
+/**
+ * Represents a SIP trunk for routing calls. See RFC 4904.
+ */
+export interface SipTrunk {
+  /**
+   * Gets or sets FQDN of the trunk.
+   */
+  fqdn: string;
+  /**
+   * Gets or sets SIP signaling port of the trunk.
+   */
+  sipSignalingPort: number;
+}

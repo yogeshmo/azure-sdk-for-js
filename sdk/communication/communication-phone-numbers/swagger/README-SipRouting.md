@@ -25,3 +25,21 @@ add-credentials: false
 azure-arm: false
 title: Sip Routing Client
 ```
+
+### Directive renaming "Trunk" model to "SipTrunk"
+```yaml
+directive:
+    - from: swagger-document
+      where: "$.definitions.Trunk" 
+      transform: >
+          $["x-ms-client-name"] = "SipTrunk";
+```
+
+### Directive renaming "TrunkRoute" model to "SipTrunkRoute"
+```yaml
+directive:
+    - from: swagger-document
+      where: "$.definitions.TrunkRoute" 
+      transform: >
+          $["x-ms-client-name"] = "SipTrunkRoute";
+```

@@ -19,17 +19,17 @@ export interface SipConfiguration {
    * SIP trunks for routing calls.
    * Map key is trunk's FQDN (1-249 characters).
    */
-  trunks?: { [propertyName: string]: Trunk };
+  trunks?: { [propertyName: string]: SipTrunk };
   /**
    * Trunk routes for routing calls.
    */
-  routes?: TrunkRoute[];
+  routes?: SipTrunkRoute[];
 }
 
 /**
  * Represents a SIP trunk for routing calls. See RFC 4904.
  */
-export interface Trunk {
+export interface SipTrunk {
   /**
    * Gets or sets SIP signaling port of the trunk.
    */
@@ -39,7 +39,7 @@ export interface Trunk {
 /**
  * Represents a trunk route for routing calls.
  */
-export interface TrunkRoute {
+export interface SipTrunkRoute {
   /**
    * Gets or sets description of the route.
    */
@@ -104,11 +104,11 @@ export interface SipConfigurationPatch {
    * SIP trunks for routing calls.
    * Map key is trunk's FQDN (1-249 characters).
    */
-  trunks?: { [propertyName: string]: TrunkPatch };
+  trunks?: { [propertyName: string]: TrunkPatch | null };
   /**
    * Trunk routes for routing calls.
    */
-  routes?: TrunkRoute[];
+  routes?: SipTrunkRoute[];
 }
 
 /**

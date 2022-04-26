@@ -17,24 +17,24 @@ export const SipConfiguration: coreHttp.CompositeMapper = {
         serializedName: "trunks",
         type: {
           name: "Dictionary",
-          value: { type: { name: "Composite", className: "Trunk" } }
+          value: { type: { name: "Composite", className: "SipTrunk" } }
         }
       },
       routes: {
         serializedName: "routes",
         type: {
           name: "Sequence",
-          element: { type: { name: "Composite", className: "TrunkRoute" } }
+          element: { type: { name: "Composite", className: "SipTrunkRoute" } }
         }
       }
     }
   }
 };
 
-export const Trunk: coreHttp.CompositeMapper = {
+export const SipTrunk: coreHttp.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "Trunk",
+    className: "SipTrunk",
     modelProperties: {
       sipSignalingPort: {
         serializedName: "sipSignalingPort",
@@ -47,10 +47,10 @@ export const Trunk: coreHttp.CompositeMapper = {
   }
 };
 
-export const TrunkRoute: coreHttp.CompositeMapper = {
+export const SipTrunkRoute: coreHttp.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "TrunkRoute",
+    className: "SipTrunkRoute",
     modelProperties: {
       description: {
         constraints: {
@@ -171,7 +171,7 @@ export const SipConfigurationPatch: coreHttp.CompositeMapper = {
         serializedName: "routes",
         type: {
           name: "Sequence",
-          element: { type: { name: "Composite", className: "TrunkRoute" } }
+          element: { type: { name: "Composite", className: "SipTrunkRoute" } }
         }
       }
     }

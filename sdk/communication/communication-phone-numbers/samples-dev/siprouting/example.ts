@@ -53,24 +53,16 @@ export async function main() {
     fqdn: 'sbc.one.domain.com',
     sipSignalingPort: 4321
   });
-  
-  // Update a route
-  await client.setRoute({
-    name: "Second Route",
-    description: "route's description",
-    numberPattern: "^\+[1-9][0-9]{3,23}$",
-    trunks: [ 'sbc.two.domain.com' ]
-  });
 
   // Get trunks
   const trunks = await client.getTrunks();
-  for await (const trunk of trunks) {
+  for (const trunk of trunks) {
     console.log(`Trunk ${trunk.fqdn}:${trunk.sipSignalingPort}`);
   }
 
   // Get routes
   const routes = await client.getRoutes();
-  for await (const route of routes) {
+  for (const route of routes) {
     console.log(`Route ${route.name} with pattern ${route.numberPattern}`);
     console.log(`Route's trunks: ${route.trunks?.join()}`);
   }
