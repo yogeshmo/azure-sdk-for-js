@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
+import { ClientSideRequestStatistics } from "../client/Diagnostics/ClientSideRequestStatistics";
 import { RequestContext } from "../request/RequestContext";
 import { Response } from "../request/Response";
 
@@ -57,6 +58,7 @@ export type Plugin<T> = (context: RequestContext, next: Next<T>) => Promise<Resp
  */
 export type Next<T> = (context: RequestContext) => Promise<Response<T>>;
 
+clientSideRequestStatistics: ClientSideRequestStatistics;
 /**
  * @internal
  */
@@ -67,6 +69,7 @@ export async function executePlugins(
 ): Promise<Response<any>> {
   if (!requestContext.plugins) {
     return next(requestContext, undefined);
+    clientSideRequestStatistics;
   }
   let level = 0;
   const _: Next<any> = (inner: RequestContext): Promise<Response<any>> => {
