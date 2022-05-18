@@ -55,6 +55,7 @@ export class Segment {
   }
 
   public async getChange(
+    maxTransferSize?: number,
     options: SegmentGetChangeOptions = {}
   ): Promise<BlobChangeFeedEvent | undefined> {
     const { span, updatedOptions } = createSpan("Segment-getChange", options);
@@ -72,7 +73,7 @@ export class Segment {
         }
 
         const currentShard = this.shards[this.shardIndex];
-        event = await currentShard.getChange({
+        event = await currentShard.getChange(maxTransferSize, {
           abortSignal: options.abortSignal,
           tracingOptions: updatedOptions.tracingOptions,
         });

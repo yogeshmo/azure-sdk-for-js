@@ -118,9 +118,14 @@ describe("Change Feed", async () => {
       { kind: "prefix", name: "idx/segments/2019/" },
     ];
     containerClientStub.listBlobsByHierarchy.withArgs("/").returns(fakeList(newYearPaths) as any);
-    const changeFeed = await changeFeedFactory.create(serviceClientStub as any, undefined, {
-      start: new Date(Date.UTC(2020, 0)),
-    });
+    const changeFeed = await changeFeedFactory.create(
+      serviceClientStub as any,
+      undefined,
+      undefined,
+      {
+        start: new Date(Date.UTC(2020, 0)),
+      }
+    );
     assert.ok(!changeFeed.hasNext());
   });
 
@@ -137,16 +142,26 @@ describe("Change Feed", async () => {
     ];
     containerClientStub.listBlobsFlat.returns(fakeList(segments) as any);
 
-    const changeFeed = await changeFeedFactory.create(serviceClientStub as any, undefined, {
-      start: new Date(Date.UTC(2019, 5)),
-    });
+    const changeFeed = await changeFeedFactory.create(
+      serviceClientStub as any,
+      undefined,
+      undefined,
+      {
+        start: new Date(Date.UTC(2019, 5)),
+      }
+    );
     assert.ok(!changeFeed.hasNext());
   });
 
   it("getChange", async () => {
-    const changeFeed = await changeFeedFactory.create(serviceClientStub as any, undefined, {
-      start: new Date(Date.UTC(2019, 0)),
-    });
+    const changeFeed = await changeFeedFactory.create(
+      serviceClientStub as any,
+      undefined,
+      undefined,
+      {
+        start: new Date(Date.UTC(2019, 0)),
+      }
+    );
     assert.ok(changeFeed.hasNext());
 
     const event = await changeFeed.getChange();
@@ -178,17 +193,27 @@ describe("Change Feed", async () => {
 
   it("with start and end time", async () => {
     // no valid segment between start and end
-    const changeFeed = await changeFeedFactory.create(serviceClientStub as any, undefined, {
-      start: new Date(Date.UTC(2019, 2, 2, 21)),
-      end: new Date(Date.UTC(2019, 3, 3, 22)),
-    });
+    const changeFeed = await changeFeedFactory.create(
+      serviceClientStub as any,
+      undefined,
+      undefined,
+      {
+        start: new Date(Date.UTC(2019, 2, 2, 21)),
+        end: new Date(Date.UTC(2019, 3, 3, 22)),
+      }
+    );
     assert.ok(!changeFeed.hasNext());
 
     // end earlier than lastConsumable
-    const changeFeed2 = await changeFeedFactory.create(serviceClientStub as any, undefined, {
-      start: new Date(Date.UTC(2019, 3, 3, 22)),
-      end: new Date(Date.UTC(2019, 4, 3, 22)),
-    });
+    const changeFeed2 = await changeFeedFactory.create(
+      serviceClientStub as any,
+      undefined,
+      undefined,
+      {
+        start: new Date(Date.UTC(2019, 3, 3, 22)),
+        end: new Date(Date.UTC(2019, 4, 3, 22)),
+      }
+    );
     assert.ok(changeFeed2.hasNext());
     const event = await changeFeed2.getChange();
     assert.equal(event, 1 as unknown as BlobChangeFeedEvent | undefined);
@@ -199,17 +224,27 @@ describe("Change Feed", async () => {
     assert.equal(event2, undefined);
 
     // end later than lastConsumable
-    const changeFeed3 = await changeFeedFactory.create(serviceClientStub as any, undefined, {
-      start: lastConsumable,
-      end: new Date(lastConsumable.getTime() + 1),
-    });
+    const changeFeed3 = await changeFeedFactory.create(
+      serviceClientStub as any,
+      undefined,
+      undefined,
+      {
+        start: lastConsumable,
+        end: new Date(lastConsumable.getTime() + 1),
+      }
+    );
     assert.ok(!changeFeed3.hasNext());
   });
 
   it("with continuation token", async () => {
-    const changeFeed = await changeFeedFactory.create(serviceClientStub as any, undefined, {
-      start: new Date(Date.UTC(2020, 2, 2, 20)),
-    });
+    const changeFeed = await changeFeedFactory.create(
+      serviceClientStub as any,
+      undefined,
+      undefined,
+      {
+        start: new Date(Date.UTC(2020, 2, 2, 20)),
+      }
+    );
     assert.ok(changeFeed.hasNext());
 
     const containerUri = "https://account.blob.core.windows.net/$blobchangefeed";

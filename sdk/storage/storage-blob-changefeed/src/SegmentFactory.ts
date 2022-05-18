@@ -44,6 +44,7 @@ export class SegmentFactory {
     containerClient: ContainerClient,
     manifestPath: string,
     cursor?: SegmentCursor,
+    maxTransferSize?: number,
     options: CreateSegmentOptions = {}
   ): Promise<Segment> {
     const { span, updatedOptions } = createSpan("SegmentFactory-create", options);
@@ -71,6 +72,7 @@ export class SegmentFactory {
           containerClient,
           shardPathSubStr,
           shardCursor,
+          maxTransferSize,
           {
             abortSignal: options.abortSignal,
             tracingOptions: updatedOptions.tracingOptions,

@@ -50,6 +50,7 @@ export class Shard {
   }
 
   public async getChange(
+    maxTransferSize?: number,
     options: ShardGetChangeOptions = {}
   ): Promise<BlobChangeFeedEvent | undefined> {
     const { span, updatedOptions } = createSpan("Shard-getChange", options);
@@ -65,6 +66,7 @@ export class Shard {
             this.chunks.shift()!,
             undefined,
             undefined,
+            maxTransferSize,
             {
               abortSignal: options.abortSignal,
               tracingOptions: updatedOptions.tracingOptions,

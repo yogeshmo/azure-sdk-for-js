@@ -32,6 +32,7 @@ export class ShardFactory {
     containerClient: ContainerClient,
     shardPath: string,
     shardCursor?: ShardCursor,
+    maxTransferSize?: number,
     options: CreateShardOptions = {}
   ): Promise<Shard> {
     const { span, updatedOptions } = createSpan("ShardFactory-create", options);
@@ -78,6 +79,7 @@ export class ShardFactory {
           chunks.shift()!,
           blockOffset,
           eventIndex,
+          maxTransferSize,
           {
             abortSignal: options.abortSignal,
             tracingOptions: updatedOptions.tracingOptions,

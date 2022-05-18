@@ -79,7 +79,10 @@ export class ChangeFeed {
     }
   }
 
-  private async advanceSegmentIfNecessary(options: ChangeFeedGetChangeOptions = {}): Promise<void> {
+  private async advanceSegmentIfNecessary(
+    maxTranfserSize?: number,
+    options: ChangeFeedGetChangeOptions = {}
+  ): Promise<void> {
     const { span, updatedOptions } = createSpan("ChangeFeed-advanceSegmentIfNecessary", options);
     try {
       if (!this.currentSegment) {
@@ -97,6 +100,7 @@ export class ChangeFeed {
           this.containerClient!,
           this.segments.shift()!,
           undefined,
+          maxTranfserSize,
           {
             abortSignal: options.abortSignal,
             tracingOptions: updatedOptions.tracingOptions,
@@ -122,6 +126,7 @@ export class ChangeFeed {
             this.containerClient!,
             this.segments.shift()!,
             undefined,
+            maxTranfserSize,
             {
               abortSignal: options.abortSignal,
               tracingOptions: updatedOptions.tracingOptions,
@@ -156,17 +161,18 @@ export class ChangeFeed {
   }
 
   public async getChange(
+    maxTranfserSize?: number,
     options: ChangeFeedGetChangeOptions = {}
   ): Promise<BlobChangeFeedEvent | undefined> {
     const { span, updatedOptions } = createSpan("ChangeFeed-getChange", options);
     try {
       let event: BlobChangeFeedEvent | undefined = undefined;
       while (event === undefined && this.hasNext()) {
-        event = await this.currentSegment!.getChange({
+        event = await this.currentSegment!.getChange(maxTranfserSize, {
           abortSignal: options.abortSignal,
           tracingOptions: updatedOptions.tracingOptions,
         });
-        await this.advanceSegmentIfNecessary({
+        await this.advanceSegmentIfNecessary(maxTranfserSize, {
           abortSignal: options.abortSignal,
           tracingOptions: updatedOptions.tracingOptions,
         });

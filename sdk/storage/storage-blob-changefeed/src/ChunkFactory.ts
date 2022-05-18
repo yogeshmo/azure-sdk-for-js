@@ -38,6 +38,7 @@ export class ChunkFactory {
     chunkPath: string,
     blockOffset?: number,
     eventIndex?: number,
+    maxTransferSize?: number,
     options: CreateChunkOptions = {}
   ): Promise<Chunk> {
     const blobClient = containerClient.getBlobClient(chunkPath);
@@ -48,7 +49,7 @@ export class ChunkFactory {
       this.lazyLoadingBlobStreamFactory.create(
         blobClient,
         blockOffset,
-        CHANGE_FEED_CHUNK_BLOCK_DOWNLOAD_SIZE,
+        maxTransferSize ? maxTransferSize : CHANGE_FEED_CHUNK_BLOCK_DOWNLOAD_SIZE,
         options
       )
     );
@@ -59,7 +60,7 @@ export class ChunkFactory {
         this.lazyLoadingBlobStreamFactory.create(
           blobClient,
           0,
-          CHANGE_FEED_CHUNK_BLOCK_DOWNLOAD_SIZE,
+          maxTransferSize ? maxTransferSize : CHANGE_FEED_CHUNK_BLOCK_DOWNLOAD_SIZE,
           options
         )
       );

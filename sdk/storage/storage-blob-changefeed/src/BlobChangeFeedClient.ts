@@ -68,6 +68,16 @@ function appendUserAgentPrefix(options?: StoragePipelineOptions): StoragePipelin
 }
 
 /**
+ * Blob Change Feed client options.
+ */
+export interface BlobChangeFeedClientOptions {
+  /**
+   * The maximum length of an transfer in bytes.
+   */
+  maximumTransferSize?: number;
+}
+
+/**
  * BlobChangeFeedClient.
  * @see https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-change-feed?tabs=azure-portal
  */
@@ -77,6 +87,7 @@ export class BlobChangeFeedClient {
    */
   private blobServiceClient: BlobServiceClient;
   private changeFeedFactory: ChangeFeedFactory;
+  private changeFeedClientOptions: BlobChangeFeedClientOptions;
 
   /**
    *
@@ -94,13 +105,15 @@ export class BlobChangeFeedClient {
     connectionString: string,
     // Legacy, no way to fix the eslint error without breaking. Disable the rule for this line.
     /* eslint-disable-next-line @azure/azure-sdk/ts-naming-options */
-    options?: StoragePipelineOptions
+    options?: StoragePipelineOptions,
+    changeFeedClientOptions?: BlobChangeFeedClientOptions
   ): BlobChangeFeedClient {
     const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString, options);
     return new BlobChangeFeedClient(
       blobServiceClient.url,
       blobServiceClient.credential,
-      appendUserAgentPrefix(options)
+      appendUserAgentPrefix(options),
+      changeFeedClientOptions
     );
   }
 
@@ -143,7 +156,8 @@ export class BlobChangeFeedClient {
     credential?: StorageSharedKeyCredential | AnonymousCredential | TokenCredential,
     // Legacy, no way to fix the eslint error without breaking. Disable the rule for this line.
     /* eslint-disable-next-line @azure/azure-sdk/ts-naming-options */
-    options?: StoragePipelineOptions
+    options?: StoragePipelineOptions,
+    changeFeedClientOptions?: BlobChangeFeedClientOptions
   );
 
   /**
@@ -165,9 +179,11 @@ export class BlobChangeFeedClient {
       | Pipeline,
     // Legacy, no way to fix the eslint error without breaking. Disable the rule for this line.
     /* eslint-disable-next-line @azure/azure-sdk/ts-naming-options */
-    options?: StoragePipelineOptions
+    options?: StoragePipelineOptions,
+    changeFeedClientOptions?: BlobChangeFeedClientOptions
   ) {
     this.changeFeedFactory = new ChangeFeedFactory();
+    this.changeFeedClientOptions = changeFeedClientOptions || {};
 
     if (credentialOrPipeline instanceof Pipeline) {
       this.blobServiceClient = new BlobServiceClient(urlOrClient, credentialOrPipeline);
@@ -186,11 +202,12 @@ export class BlobChangeFeedClient {
     const changeFeed: ChangeFeed = await this.changeFeedFactory.create(
       this.blobServiceClient,
       undefined,
+      this.changeFeedClientOptions.maximumTransferSize,
       options
     );
 
     while (changeFeed.hasNext()) {
-      const event = await changeFeed.getChange({
+      const event = await changeFeed.getChange(this.changeFeedClientOptions.maximumTransferSize, {
         abortSignal: options.abortSignal,
         tracingOptions: options.tracingOptions,
       });
@@ -211,6 +228,7 @@ export class BlobChangeFeedClient {
     const changeFeed: ChangeFeed = await this.changeFeedFactory.create(
       this.blobServiceClient,
       continuationToken,
+      this.changeFeedClientOptions.maximumTransferSize,
       options
     );
 
@@ -220,7 +238,7 @@ export class BlobChangeFeedClient {
     while (changeFeed.hasNext()) {
       const eventPage = new BlobChangeFeedEventPage();
       while (changeFeed.hasNext() && eventPage.events.length < maxPageSize) {
-        const event = await changeFeed.getChange({
+        const event = await changeFeed.getChange(this.changeFeedClientOptions.maximumTransferSize, {
           abortSignal: options.abortSignal,
           tracingOptions: options.tracingOptions,
         });

@@ -59,6 +59,7 @@ export class ChangeFeedFactory {
   public async create(
     blobServiceClient: BlobServiceClient,
     continuationToken?: string,
+    maxTranfserSize?: number,
     options: BlobChangeFeedListChangesOptions = {}
   ): Promise<ChangeFeed> {
     const { span, updatedOptions } = createSpan("ChangeFeedFactory-create", options);
@@ -150,6 +151,7 @@ export class ChangeFeedFactory {
         containerClient,
         segments.shift()!,
         cursor?.CurrentSegmentCursor,
+        maxTranfserSize,
         {
           abortSignal: options.abortSignal,
           tracingOptions: updatedOptions.tracingOptions,
