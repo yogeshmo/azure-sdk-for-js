@@ -6,13 +6,10 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
-import * as coreHttp from "@azure/core-http";
+import * as coreClient from "@azure/core-client";
 import { EmailRestApiClientOptionalParams } from "./models";
 
-const packageName = "@azure/communication-email";
-const packageVersion = "1.0.0-beta.1";
-
-export class EmailRestApiClientContext extends coreHttp.ServiceClient {
+export class EmailRestApiClientContext extends coreClient.ServiceClient {
   endpoint: string;
   apiVersion: string;
 
@@ -30,18 +27,25 @@ export class EmailRestApiClientContext extends coreHttp.ServiceClient {
     if (!options) {
       options = {};
     }
+    const defaults: EmailRestApiClientOptionalParams = {
+      requestContentType: "application/json; charset=utf-8"
+    };
 
-    if (!options.userAgent) {
-      const defaultUserAgent = coreHttp.getDefaultUserAgentValue();
-      options.userAgent = `${packageName}/${packageVersion} ${defaultUserAgent}`;
-    }
+    const packageDetails = `azsdk-js-communication-email/1.0.0-beta.2`;
+    const userAgentPrefix =
+      options.userAgentOptions && options.userAgentOptions.userAgentPrefix
+        ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
+        : `${packageDetails}`;
 
-    super(undefined, options);
-
-    this.requestContentType = "application/json; charset=utf-8";
-
-    this.baseUri = options.endpoint || "{endpoint}";
-
+    const optionsWithDefaults = {
+      ...defaults,
+      ...options,
+      userAgentOptions: {
+        userAgentPrefix
+      },
+      baseUri: options.endpoint || "{endpoint}"
+    };
+    super(optionsWithDefaults);
     // Parameter assignments
     this.endpoint = endpoint;
 

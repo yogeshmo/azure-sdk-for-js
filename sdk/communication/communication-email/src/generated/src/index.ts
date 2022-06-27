@@ -8,4 +8,5 @@
 
 export * from "./models";
 export { EmailRestApiClient } from "./emailRestApiClient";
+export { EmailRestApiClientContext } from "./emailRestApiClientContext";
 export * from "./operationsInterfaces";

@@ -10,7 +10,7 @@ import { Email } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
-import { EmailRestApiClient } from "../emailRestApiClient";
+import { EmailRestApiClientContext } from "../emailRestApiClientContext";
 import {
   EmailGetSendStatusOptionalParams,
   EmailGetSendStatusResponse,
@@ -21,13 +21,13 @@ import {
 
 /** Class containing Email operations. */
 export class EmailImpl implements Email {
-  private readonly client: EmailRestApiClient;
+  private readonly client: EmailRestApiClientContext;
 
   /**
    * Initialize a new instance of the class Email class.
    * @param client Reference to the service client
    */
-  constructor(client: EmailRestApiClient) {
+  constructor(client: EmailRestApiClientContext) {
     this.client = client;
   }
 

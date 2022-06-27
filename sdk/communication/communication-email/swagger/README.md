@@ -21,7 +21,7 @@ azure-arm: false
 add-credentials: false
 v3: true
 use-extension:
-  "@autorest/typescript": "6.0.0-beta.19"
+  "@autorest/typescript": "6.0.0-beta.15"
 ```
 
 ## Customizations for Email Client Generator

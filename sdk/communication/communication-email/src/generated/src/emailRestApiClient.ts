@@ -6,53 +6,19 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
-import * as coreClient from "@azure/core-client";
 import { EmailImpl } from "./operations";
 import { Email } from "./operationsInterfaces";
+import { EmailRestApiClientContext } from "./emailRestApiClientContext";
 import { EmailRestApiClientOptionalParams } from "./models";
 
-export class EmailRestApiClient extends coreClient.ServiceClient {
-  endpoint: string;
-  apiVersion: string;
-
+export class EmailRestApiClient extends EmailRestApiClientContext {
   /**
    * Initializes a new instance of the EmailRestApiClient class.
    * @param endpoint The communication resource, for example https://my-resource.communication.azure.com
    * @param options The parameter options
    */
   constructor(endpoint: string, options?: EmailRestApiClientOptionalParams) {
-    if (endpoint === undefined) {
-      throw new Error("'endpoint' cannot be null");
-    }
-
-    // Initializing default values for options
-    if (!options) {
-      options = {};
-    }
-    const defaults: EmailRestApiClientOptionalParams = {
-      requestContentType: "application/json; charset=utf-8"
-    };
-
-    const packageDetails = `azsdk-js-communication-email/1.0.0-beta.2`;
-    const userAgentPrefix =
-      options.userAgentOptions && options.userAgentOptions.userAgentPrefix
-        ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
-        : `${packageDetails}`;
-
-    const optionsWithDefaults = {
-      ...defaults,
-      ...options,
-      userAgentOptions: {
-        userAgentPrefix
-      },
-      baseUri: options.endpoint ?? options.baseUri ?? "{endpoint}"
-    };
-    super(optionsWithDefaults);
-    // Parameter assignments
-    this.endpoint = endpoint;
-
-    // Assigning values to Constant parameters
-    this.apiVersion = options.apiVersion || "2021-10-01-preview";
+    super(endpoint, options);
     this.email = new EmailImpl(this);
   }
 
